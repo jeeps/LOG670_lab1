@@ -58,3 +58,27 @@ association communication between
   Central [1] role communique
 end
 
+association communication2 between
+  Convois [1..*] role communique
+  Central [1] role communique
+end
+
+association Monitoring between
+  Balise [1..*] role signal
+  Central [1] role monitore
+end
+
+association Suivance between
+  Camion [1..*] role suit
+  Route [1] role signal
+end
+
+association Creation between
+  Central [1] role cree
+  Route [1..*] role signal
+end
+
+association Contenir between
+  Balise [1..*] role contenu_dans
+  Route [1] role contient
+end
