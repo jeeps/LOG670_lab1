@@ -13,40 +13,40 @@
     <node id="Convois" sizeCalculated="true" type="Class">
         <name>Convois</name>
         <strategy type="org.tzi.use.gui.views.diagrams.elements.positioning.StrategyFixed">
-            <x>375.5738035020314</x>
-            <y>187.9389761402042</y>
+            <x>160.5738035020314</x>
+            <y>112.9389761402042</y>
         </strategy>
         <hidden>false</hidden>
     </node>
     <node id="Balise" sizeCalculated="true" type="Class">
         <name>Balise</name>
         <strategy type="org.tzi.use.gui.views.diagrams.elements.positioning.StrategyFixed">
-            <x>216.13935277856717</x>
-            <y>79.6819079016689</y>
+            <x>16.139352778567172</x>
+            <y>17.681907901668893</y>
         </strategy>
         <hidden>false</hidden>
     </node>
     <node id="Camion" sizeCalculated="true" type="Class">
         <name>Camion</name>
         <strategy type="org.tzi.use.gui.views.diagrams.elements.positioning.StrategyFixed">
-            <x>267.5032186620361</x>
-            <y>325.90311375572685</y>
+            <x>56.50321866203609</x>
+            <y>192.90311375572685</y>
         </strategy>
         <hidden>false</hidden>
     </node>
     <node id="Central" sizeCalculated="true" type="Class">
         <name>Central</name>
         <strategy type="org.tzi.use.gui.views.diagrams.elements.positioning.StrategyFixed">
-            <x>206.52732179843463</x>
-            <y>222.25398093887247</y>
+            <x>54.52732179843463</x>
+            <y>116.25398093887247</y>
         </strategy>
         <hidden>false</hidden>
     </node>
     <node id="Route" sizeCalculated="true" type="Class">
         <name>Route</name>
         <strategy type="org.tzi.use.gui.views.diagrams.elements.positioning.StrategyFixed">
-            <x>391.00883335556665</x>
-            <y>82.72202126352767</y>
+            <x>111.00883335556665</x>
+            <y>17.722021263527665</y>
         </strategy>
         <hidden>false</hidden>
     </node>
@@ -100,11 +100,10 @@
                 <hidden>false</hidden>
             </edgeproperty>
             <edgeproperty id="appartenance::source::rolename"
-                sizeCalculated="true" type="rolename"
-                userDefined="false" visible="true">
+                sizeCalculated="true" type="rolename" userDefined="true" visible="true">
                 <name>appartient</name>
                 <strategy type="org.tzi.use.gui.views.diagrams.elements.positioning.StrategyRelativeToAttached">
-                    <userOffsetX>0.0</userOffsetX>
+                    <userOffsetX>65.0</userOffsetX>
                     <userOffsetY>0.0</userOffsetY>
                     <attached>appartenance::WayPoint::0</attached>
                     <offset_x>8</offset_x>

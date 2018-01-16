@@ -59,8 +59,8 @@ association communication between
 end
 
 association communication2 between
-  Convois [1..*] role communique
-  Central [1] role communique
+  Convois [1..*] role communique2
+  Central [1] role communique2
 end
 
 association Monitoring between
@@ -75,10 +75,10 @@ end
 
 association Creation between
   Central [1] role cree
-  Route [1..*] role signal
+  Route [1..*] role signal2
 end
 
 association Contenir between
-  Balise [1..*] role contenu_dans
+  Balise [1..*] role contenu
   Route [1] role contient
 end
