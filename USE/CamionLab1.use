@@ -1,0 +1,50 @@
+-- Exemple adapté du cours : CIS 771 Software Specifications
+-- Auteur: John Hatcliff
+-- Date: 6 mars 2002
+--
+-- Pour les cours : MGL806 Méthodes formelles et semi-formelles
+--                  LOG310 Langages formels et semi-formels
+-- RÈvision: Sylvie Ratté
+-- Date: 11 fÈvrier 2005
+-- Modification 14 janvier 2012
+--
+-- Fichier: CamionLab1.use
+--
+-- Description:
+-- Le modèle "Camion" en USE OCL
+-- comportant uniquement des classes et des attributs.
+--
+
+--
+
+model CamionLab1
+
+-- classes
+
+class Camion
+attributes
+  ID : Integer
+end
+
+class Convois 
+attributes
+  ID : Integer
+end
+
+class Central 
+end
+
+class Balise 
+end
+
+class Route 
+end
+
+-- associations
+
+association asdf between
+  Camion[0..1] role appartient;
+  Convois[0..*] role detient;
+end
+
+
