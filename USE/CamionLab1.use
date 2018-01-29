@@ -61,8 +61,8 @@ end
 -- associations
 
 association appartenance between
-  Camion[0..1] role appartient;
-  Convois[0..*] role detient;
+  Camion[1..*] role appartient;
+  Convois[1] role detient;
 end
 
 association communication between
