@@ -2,7 +2,8 @@
 <html>
     <head>
         <!-- CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/main.css">
         <!-- // END CSS -->
 
         <!-- JS -->
@@ -52,10 +53,90 @@
         <div id="wrapper" class="container">
             <div class="row">
                 <div class="col-md-12">
-                   <!-- Section title -->
-                   <h1 class="display-3">Diagrammes de classes</h1>
-                   
-                                       
+					<!-- Section title -->
+					<h1 class="display-3">Diagrammes de classes</h1>
+
+					<p>Le diagramme de classes présenté permet de comprendre le monde dans lequel évolue notre convoi de camion, mais également de comprendre le lien entre chacun des éléments. 
+					Voici donc une représentation (sous la forme d'un MDD) de notre système :</p>
+
+					<div class="imgHolder">
+						<img src="../mdd/ebauche_mdd_V2.jpg" alt="Modèle du domaine. (Lab1)" />
+					</div>
+					
+					<div class="emphasis">
+						<p><b> Explications du modèle du domaine </b></p>
+						
+						<ul>
+							<li>
+								<p> 
+									<u>Centrale</u> <br>
+									La centrale est le gestionnaire principale. C'est cette classe qui permet de communiquer avec chacun des camions individuellement ou avec les convois. Elle à également le rôle de suiveiller le réseau et gérer les routes.
+								</p>
+								
+								<p style="margin-bottom:5px;">Les associations :</p>
+								<ol>
+									<li>&rarr; Camion</li>
+									<li>&rarr; Convoi</li>
+									<li>&rarr; Balise</li>
+									<li>&rarr; Route</li>
+								</ol>
+							</li>
+							
+							<li>
+								<p> 
+									<u>Camion</u> <br>
+										
+								</p>
+								
+								<p style="margin-bottom:5px;">Les associations :</p>
+								<ol>
+									<li>&rarr; Centrale</li>
+									<li>&rarr; Convoi</li>
+								</ol>
+							</li>
+							
+							<li>
+								<p> 
+									<u>Convoi</u> <br>
+										
+								</p>
+								
+								<p style="margin-bottom:5px;">Les associations :</p>
+								<ol>
+									<li>&rarr; Centrale</li>
+									<li>&rarr; Camion</li>
+									<li>&rarr; Route</li>
+								</ol>
+							</li>
+							
+							<li>
+								<p> 
+									<u>Balise</u> <br>
+										
+								</p>
+								
+								<p style="margin-bottom:5px;">Les associations :</p>
+								<ol>
+									<li>&rarr; Centrale</li>
+									<li>&rarr; Route</li>
+								</ol>
+							</li>
+							
+							<li>
+								<p> 
+									<u>Route</u> <br>
+										
+								</p>
+								
+								<p style="margin-bottom:5px;">Les associations :</p>
+								<ol>
+									<li>&rarr; Centrale</li>
+									<li>&rarr; Convoi</li>
+									<li>&rarr; Balise</li>
+								</ol>
+							</li>
+						</ul>
+					</div>
                 </div>
             </div>
         </div>
