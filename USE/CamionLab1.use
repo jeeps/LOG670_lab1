@@ -26,24 +26,36 @@ attributes
   ID : Integer
   isLeader : Integer
   convoisId : Integer
+operations
+  method():Integer
 end
 
 class Convois 
 attributes
   ID : Integer
+operations
+  method():Integer
 end
 
-class Central 
+class Central
+attributes
+  field: Integer
+operations
+  method():Integer
 end
 
 class Balise 
 attributes
   ID : Integer
+operations
+  method():Integer
 end
 
 class Route 
 attributes
   ID : Integer
+operations
+  method():Integer
 end
 
 -- associations
@@ -68,9 +80,9 @@ association Monitoring between
   Central [1] role monitore
 end
 
-association Suivance between
-  Camion [1..*] role suit
-  Route [1] role signal
+association Contenir2 between
+  Convois [1..*] role contenu2
+  Route [1] role contient2
 end
 
 association Creation between
