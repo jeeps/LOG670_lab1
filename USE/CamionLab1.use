@@ -73,7 +73,7 @@ end
 
 association Regroupe between
   Camion[2..*] role appartient;
-  Convois[1] role detient;
+  Convois[0..1] role detient;
 end
 
 association Communique between
@@ -117,3 +117,16 @@ context Convois
 context Camion
   inv leaderEnAvant:
   self.isLeader implies self.positionConvoi=1
+  
+ context Camion
+  inv camionSolo:
+  let IDRouteCamion: Integer = self.routeId in
+  if self.detient->isEmpty() then
+  Camion.allInstances->one(c | c.routeId=IDRouteCamion) and Convois.allInstances->excludes(IDRouteCamion) else true
+  endif
+
+ context Camion
+  inv camionWithConvoi:
+  if self.detient->notEmpty() then
+  self.routeId = self.detient.routeId else true 
+  endif
