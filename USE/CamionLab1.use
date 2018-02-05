@@ -24,53 +24,64 @@ model CamionLab1
 class Camion
 attributes
   ID : Integer
-  isLeader : Integer
+  isLeader : Boolean
   convoisId : Integer
+  positionConvoi : Integer
+  routeId : Integer
 operations
-  method():Integer
+  addToConvoi():Integer
+  removeFromConvoi():Integer
+  setRoute():Integer
 end
 
 class Convois 
 attributes
   ID : Integer
+  routeId : Integer
 operations
-  method():Integer
+  setRoute():Integer
+  getRoute():Integer
 end
 
 class Central
 attributes
-  field: Integer
-operations
-  method():Integer
+  id: Integer
 end
 
 class Balise 
 attributes
   ID : Integer
+  status: String --Pas capable de mettre "enum" ici
 operations
-  method():Integer
+  getStatus():String --Pas capable de mettre "enum" ici
 end
 
 class Route 
 attributes
   ID : Integer
+  balises: Integer -- Pas capable de mettre "Set"
+  nbHours: Integer
+  nbConvoi: Integer
 operations
-  method():Integer
+  addBalise():Integer
+  removeBalise():Integer
+  evalTime():String --Pas capable de mettre "date" ici
+  countConvoi():Integer
 end
 
 -- associations
 
-association appartenance between
-  Camion[1..*] role appartient;
+association Regroupe between
+  Camion[2..*] role appartient;
   Convois[1] role detient;
 end
 
-association communication between
+association Communique between
   Camion [1..*] role communique
   Central [1] role communique
 end
 
-association communication2 between
+association Gere between
   Convois [1..*] role communique2
   Central [1] role communique2
 end
@@ -94,3 +105,15 @@ association Contenir between
   Balise [1..*] role contenu
   Route [1] role contient
 end
+
+-- OCL constraints
+ 
+constraints
+
+context Convois
+  inv ConvoisActif:
+  self.appartient->one(c | c.isLeader)
+  
+context Camion
+  inv leaderEnAvant:
+  self.isLeader implies self.positionConvoi=1
