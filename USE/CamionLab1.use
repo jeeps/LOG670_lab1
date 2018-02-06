@@ -25,22 +25,22 @@ class Camion
 attributes
   ID : Integer
   isLeader : Boolean
-  convoisId : Integer
-  positionConvoi : Integer
-  routeId : Integer
+  convoiId : Integer -- ID du convoi qui contient ce camion (peut être null)
+  positionConvoi : Integer -- Position dans le convoi (peut être null)
+  routeId : Integer -- ID de la route que suit le camion (vide si le dans un convoi? nécessaire?)
 operations
-  addToConvoi():Integer
-  removeFromConvoi():Integer
-  setRoute():Integer
+  addToConvoi() : Integer
+  removeFromConvoi() : Integer
+  setRoute() : Integer
 end
 
-class Convois 
+class Convoi
 attributes
   ID : Integer
-  routeId : Integer
+  routeId : Integer  -- ID de la route que suit le convoi (ne peut pas être null)
 operations
-  setRoute():Integer
-  getRoute():Integer
+  setRoute() : Integer
+  getRoute() : Integer
 end
 
 class Central
@@ -51,29 +51,29 @@ end
 class Balise 
 attributes
   ID : Integer
-  status: String --Pas capable de mettre "enum" ici
+  status: Boolean
 operations
-  getStatus():String --Pas capable de mettre "enum" ici
+  getStatus() : Boolean
 end
 
 class Route 
 attributes
   ID : Integer
-  balises: Integer -- Pas capable de mettre "Set"
-  nbHours: Integer
-  nbConvoi: Integer
+  balises : Set(Balise)
+  nbHours : Integer -- Nombre d'heure approx.
+  nbConvoi : Integer -- Nombre de convoi sur cette route
 operations
-  addBalise():Integer
-  removeBalise():Integer
-  evalTime():String --Pas capable de mettre "date" ici
-  countConvoi():Integer
+  addBalise() : Integer
+  removeBalise() : Integer
+  evalTime() : Integer -- Retourne le nombre d'heure
+  countConvoi() : Integer
 end
 
 -- associations
 
 association Regroupe between
   Camion[2..*] role appartient;
-  Convois[0..1] role detient;
+  Convoi[0..1] role detient;
 end
 
 association Communique between
@@ -82,7 +82,7 @@ association Communique between
 end
 
 association Gere between
-  Convois [1..*] role communique2
+  Convoi [1..*] role communique2
   Central [1] role communique2
 end
 
@@ -92,7 +92,7 @@ association Monitoring between
 end
 
 association Contenir2 between
-  Convois [1..*] role contenu2
+  Convoi [1..*] role contenu2
   Route [1] role contient2
 end
 
@@ -110,22 +110,22 @@ end
  
 constraints
 
-context Convois
-  inv ConvoisActif:
+context Convoi
+  inv ConvoiActif:
   self.appartient->one(c | c.isLeader)
   
 context Camion
   inv leaderEnAvant:
   self.isLeader implies self.positionConvoi=1
   
- context Camion
+context Camion
   inv camionSolo:
   let IDRouteCamion: Integer = self.routeId in
   if self.detient->isEmpty() then
-  Camion.allInstances->one(c | c.routeId=IDRouteCamion) and Convois.allInstances->excludes(IDRouteCamion) else true
+  Camion.allInstances->one(c | c.routeId=IDRouteCamion) and Convoi.allInstances->excludes(IDRouteCamion) else true
   endif
 
- context Camion
+context Camion
   inv camionWithConvoi:
   if self.detient->notEmpty() then
   self.routeId = self.detient.routeId else true 
