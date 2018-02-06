@@ -30,6 +30,7 @@ attributes
   routeId : Integer -- ID de la route que suit le camion (vide si le dans un convoi? nécessaire?)
 operations
   addToConvoi() : Integer
+  = ID
   removeFromConvoi() : Integer
   setRoute() : Integer
 end
@@ -59,7 +60,6 @@ end
 class Route 
 attributes
   ID : Integer
-  balises : Set(Balise)
   nbHours : Integer -- Nombre d'heure approx.
   nbConvoi : Integer -- Nombre de convoi sur cette route
 operations
@@ -112,21 +112,25 @@ constraints
 
 context Convoi
   inv ConvoiActif:
-  self.appartient->one(c | c.isLeader)
+	self.appartient->one(c | c.isLeader) and self.appartient->size() >= 2 
   
 context Camion
   inv leaderEnAvant:
-  self.isLeader implies self.positionConvoi=1
-  
-context Camion
+	self.isLeader implies self.positionConvoi = 1
+	
   inv camionSolo:
-  let IDRouteCamion: Integer = self.routeId in
-  if self.detient->isEmpty() then
-  Camion.allInstances->one(c | c.routeId=IDRouteCamion) and Convoi.allInstances->excludes(IDRouteCamion) else true
-  endif
-
-context Camion
+	let IDRouteCamion: Integer = self.routeId in
+	if self.detient->isEmpty() then
+		Camion.allInstances->one(c | c.routeId=IDRouteCamion) and Convoi.allInstances->excludes(IDRouteCamion) else true
+	endif
+	
   inv camionWithConvoi:
-  if self.detient->notEmpty() then
-  self.routeId = self.detient.routeId else true 
-  endif
+	if self.detient->notEmpty() then
+		self.routeId = self.detient.routeId else true 
+	endif
+	
+	
+context Route
+	inv BaliseActive:
+		self.contenu.forAll(status = true)
+

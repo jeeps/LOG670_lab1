@@ -1,0 +1,4 @@
+-- Creation de camions
+! C1 := new Camion('Camion1')
+! C1.ID := 6
+? C1.addToConvoi()

@@ -59,13 +59,99 @@
                     <table class="table table-bordered">
                         <tbody>
                             <tr>
-                                <th class="">Invariants</th>
-                                <th class="col-md-9">Détails</th>
+                                <th style="width:35%">Invariants</th>
+                                <th>Détails</th>
                             </tr>
 
                             <tr>
-                                <td>#1</td>
-                                <td>sad</td>
+                                <td>
+									<code>
+<pre>
+context self : Convoi 
+  inv ConvoiActif: 
+    (self.appartient->one( c:Camion | c.isLeader ) 
+	and (self.appartient->size() >= 2))
+</pre>
+									</code>
+								</td>
+                                <td>
+									<p><b>Convoi Actif</b></p>
+									<p>Le rôle de cet invariant est de s'asurer que chacun de nos convois contient un minimum de 2 camions et qu'au moins l'un d'entre est le leader.</p>
+								</td>
+                            </tr>
+							
+							<tr>
+                                <td>
+									<code>
+<pre>
+context self : Camion 
+  inv leaderEnAvant:   
+    (self.isLeader implies (self.positionConvoi = 1)) 
+</pre>
+									</code>
+								</td>
+                                <td>
+									<p><b>Le leader devant</b></p>
+									<p>Ici, l'objectif de vérifier si la position des camions dans le convoi fait du sens. C'est-à-dire, le leader en premier et les autres ensuite.</p>
+								</td>
+                            </tr>
+							
+							<tr>
+                                <td>
+									<code>
+<pre>
+context self : Camion 
+  inv camionSolo:   
+    (let IDRouteCamion : Integer = self.routeId in 
+	  if self.detient->isEmpty() then 
+	   (Camion.allInstances()->one(c:Camion | (c.routeId = IDRouteCamion)) 
+	  and Convoi.allInstances()->excludes(IDRouteCamion)) 
+	else 
+	  true 
+	endif)
+</pre>
+									</code>
+								</td>
+                                <td>
+									<p><b>Camion seul</b></p>
+									<p>Ici, l'objectif de vérifier si la position des camions dans le convoi fait du sens. C'est-à-dire, le leader en premier et les autres ensuite.</p>
+								</td>
+                            </tr>
+							
+							<tr>
+                                <td>
+									<code>
+<pre>
+context self : Camion 
+  inv camionWithConvoi:   
+    if self.detient->notEmpty() then 
+	  (self.routeId = self.detient.routeId) 
+	else 
+	  true 
+	endif
+</pre>
+									</code>
+								</td>
+                                <td>
+									<p><b>Camion dans un convoi</b></p>
+									<p>Ici, l'objectif de vérifier si la position des camions dans le convoi fait du sens. C'est-à-dire, le leader en premier et les autres ensuite.</p>
+								</td>
+                            </tr>
+							
+							<tr>
+                                <td>
+									<code>
+<pre>
+context self : Route 
+  inv BaliseActive:   
+    self.contenu->forAll( $elem0:Balise | ($elem0.status = true) ) 
+</pre>
+									</code>
+								</td>
+                                <td>
+									<p><b>Balise active</b></p>
+									<p>Pour qu'une balise soit autorisé dans une route, celle-ci doit être fonctionnelle. Cet invariant vérifie que toutes les balises ont un status "Online".</p>
+								</td>
                             </tr>
                         </tbody>
                     </table>  
