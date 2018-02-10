@@ -127,17 +127,17 @@ context Camion
 	
   inv camionSolo:
 	let IDRouteCamion: Integer = self.routeId in
-	if self.detient->isEmpty() then
+	if self.convoi->isEmpty() then
 		Camion.allInstances->one(c | c.routeId=IDRouteCamion) and Convoi.allInstances->excludes(IDRouteCamion) else true
 	endif
 	
   inv camionWithConvoi:
-	if self.detient->notEmpty() then
-		self.routeId = self.detient.routeId else true 
+	if self.convoi->notEmpty() then
+		self.routeId = self.convoi.routeId else true 
 	endif
 	
 	
 context Route
 	inv BaliseActive:
-		self.contenu.forAll(status = true)
+		self.balise.forAll(status = true)
 
