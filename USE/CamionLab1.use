@@ -46,6 +46,12 @@ end
 class Central
 attributes
   id: Integer
+operations
+  getConvoiActif(): Sequence(Convoi)=
+  self.convoi->iterate(c:Convoi;List:Sequence(Convoi)= Sequence{}|
+  if c.camion->one(cam | cam.isLeader) and c.camion->size()>=2 then
+  List->append(c) else List endif )
+  
 end
 
 class Balise 
@@ -72,38 +78,38 @@ end
 -- associations
 
 association Regroupe between
-  Camion[2..*] role appartient;
-  Convoi[0..1] role detient;
+  Camion[2..*] role camion;
+  Convoi[0..1] role convoi;
 end
 
 association Communique between
-  Camion [1..*] role communique
-  Central [1] role communique
+  Camion [1..*] role camion
+  Central [1] role central
 end
 
 association Gere between
-  Convoi [1..*] role communique2
-  Central [1] role communique2
+  Convoi [1..*] role convoi
+  Central [1] role central
 end
 
 association Monitoring between
-  Balise [1..*] role signal
-  Central [1] role monitore
+  Balise [1..*] role balise
+  Central [1] role central
 end
 
 association Contenir2 between
-  Convoi [1..*] role contenu2
-  Route [1] role contient2
+  Convoi [1..*] role convoi
+  Route [1] role route
 end
 
 association Creation between
-  Central [1] role cree
-  Route [1..*] role signal2
+  Central [1] role central
+  Route [1..*] role route
 end
 
 association Contenir between
-  Balise [1..*] role contenu
-  Route [1] role contient
+  Balise [1..*] role balise
+  Route [1] role route
 end
 
 -- OCL constraints
@@ -112,7 +118,7 @@ constraints
 
 context Convoi
   inv ConvoiActif:
-  self.appartient->one(c | c.isLeader)
+  self.camion->one(c | c.isLeader)
   
 context Camion
   inv leaderEnAvant:
@@ -121,12 +127,12 @@ context Camion
 context Camion
   inv camionSolo:
   let IDRouteCamion: Integer = self.routeId in
-  if self.detient->isEmpty() then
+  if self.convoi->isEmpty() then
   Camion.allInstances->one(c | c.routeId=IDRouteCamion) and Convoi.allInstances->excludes(IDRouteCamion) else true
   endif
 
 context Camion
   inv camionWithConvoi:
-  if self.detient->notEmpty() then
-  self.routeId = self.detient.routeId else true 
+  if self.convoi->notEmpty() then
+  self.routeId = self.convoi.routeId else true 
   endif
