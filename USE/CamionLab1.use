@@ -75,6 +75,21 @@ operations
 	    insert(cam,conv) into Regroupe end;
 	  result:= conv
     end
+	
+  modifierLeader(conv: Convoi, camLeader: Camion, camNotLeader: Camion)
+    begin
+	declare pos:Integer; 
+	pos:= camNotLeader.positionConvoi;
+	camLeader.positionConvoi:=pos;
+	camNotLeader.positionConvoi:=1;
+	camNotLeader.isLeader:=true;
+	camLeader.isLeader:=false;
+	end
+	pre camionInConvoi: conv.camion->includesAll(Set{camLeader,camNotLeader})
+	pre leaderIsLeader: camLeader.positionConvoi=1 and camLeader.isLeader=true
+	pre notLeaderIsNotLeader: camNotLeader.positionConvoi>1 and camNotLeader.isLeader=false
+	post leaderIsNotLeader: camLeader.positionConvoi>1 and camLeader.isLeader=false
+	post notLeaderIsLeader: camNotLeader.positionConvoi=1 and camNotLeader.isLeader=true
 end
 
 
