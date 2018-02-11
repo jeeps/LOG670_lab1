@@ -42,6 +42,7 @@ attributes
 operations
   setRoute() : Integer
   getRoute() : Integer
+  
 end
 
 class Central
@@ -53,7 +54,29 @@ operations
   if c.camion->one(cam | cam.isLeader) and c.camion->size()>=2 then
   List->append(c) else List endif )
   
+  dissocierConvoi(conv : Convoi)
+    begin
+      declare test : Camion;
+	  test := new Camion;
+	  test := conv.camion->any(c:Camion|c.isLeader);
+	  test.isLeader:=false;
+	  for cam in conv.camion do 
+	    delete(cam,conv) from Regroupe end; 
+    end
+    pre convoiExist: self.convoi->includes(conv)
+    post convoiExistePlus: self.convoi=self.convoi@pre->excluding(conv)
+	
+  creerConvoi(list:Set(Camion)) : Convoi
+    begin
+      declare conv : Convoi;
+	  conv := new Convoi;
+	  insert (conv,self) into Gere;
+	  for cam in list do 
+	    insert(cam,conv) into Regroupe end;
+	  result:= conv
+    end
 end
+
 
 class Balise 
 attributes
