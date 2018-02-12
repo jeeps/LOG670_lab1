@@ -66,14 +66,13 @@ operations
     pre convoiExist: self.convoi->includes(conv)
     post convoiExistePlus: self.convoi=self.convoi@pre->excluding(conv)
 	
-  creerConvoi(list:Set(Camion)) : Convoi
+  creerConvoi(list:Set(Camion)) 
     begin
       declare conv : Convoi;
 	  conv := new Convoi;
 	  insert (conv,self) into Gere;
 	  for cam in list do 
 	    insert(cam,conv) into Regroupe end;
-	  result:= conv
     end
 	
   modifierLeader(conv: Convoi, camLeader: Camion, camNotLeader: Camion)
@@ -90,6 +89,21 @@ operations
 	pre notLeaderIsNotLeader: camNotLeader.positionConvoi>1 and camNotLeader.isLeader=false
 	post leaderIsNotLeader: camLeader.positionConvoi>1 and camLeader.isLeader=false
 	post notLeaderIsLeader: camNotLeader.positionConvoi=1 and camNotLeader.isLeader=true
+	
+  fusionnerConvoi(mainConv: Convoi,list:Set(Convoi))
+    begin
+	  declare test : Camion;
+	  test := new Camion;
+	  for conv in list do
+        test:=conv.camion->any(c:Camion|c.isLeader);
+        test.isLeader:= false;		
+	    for cam in conv.camion do
+		  cam.ID:=mainConv.ID;
+		  delete (cam,conv) from Regroupe;
+	      insert(cam,mainConv) into Regroupe end;
+		delete (conv,self) from Gere;
+		destroy conv end;
+	end
 end
 
 
