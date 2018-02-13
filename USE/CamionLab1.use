@@ -68,11 +68,15 @@ operations
 	  for cam in conv.camion do 
 	    cam.convoiId:=0;
 		cam.positionConvoi:=0;
-	    delete(cam,conv) from Regroupe 
+	    delete(cam,conv) from Regroupe;		
 	  end; 
+	  delete (conv,self) from Gere;
+	  delete (conv,conv.route) from Contenir2;
+      destroy conv
     end
     pre convoiExist: self.convoi->includes(conv)
-    post convoiExistePlus: self.convoi=self.convoi@pre->excluding(conv)
+    --post convoiExistePlus: self.convoi=self.convoi@pre->excluding(conv)
+	post convoiExistePlus: conv.oclIsUndefined()
 	
   creerConvoi(list:Set(Camion)) 
     begin
@@ -82,16 +86,18 @@ operations
 	    conv.routeId:=1;
 	  
 	  insert (conv,self) into Gere;
+
 	  
 	  for cam in list do 
 	    if conv.camion->isEmpty() then
 		  cam.positionConvoi:=1;
 		  cam.isLeader:=true;
 		  cam.convoiId:=conv.ID;
-		  insert(cam,conv) into Regroupe 
+		  insert(cam,conv) into Regroupe;
+		  insert (conv,self.route->any(r|r.ID=cam.routeId)) into Contenir2;
 		else
 		  insert(cam,conv) into Regroupe;
-          cam.positionConvoi:=conv.camion->size()+1;
+          cam.positionConvoi:=conv.camion->size();
 		  cam.convoiId:=conv.ID
 		end;  
 	  end;
@@ -132,7 +138,7 @@ operations
 	    
 		for cam in conv.camion do
 		  cam.convoiId:=mainConv.ID;
-		  cam.positionConvoi:=mainConv->size()+1;
+		  cam.positionConvoi:=mainConv.camion->size()+1;
 		  delete (cam,conv) from Regroupe;
 	      insert(cam,mainConv) into Regroupe 
 		end;
@@ -172,10 +178,11 @@ operations
 		end;
 	  delete (cam,cam.convoi) from Regroupe;
 	  cam.isLeader:=false;
-	  cam.positionConvoi:=null;
-	  cam.convoiId:=null;
+	  cam.positionConvoi:=0;
+	  cam.convoiId:=0;
 	end
 	pre camionInConvoi: cam.convoi->notEmpty()
+	pre notLeader: cam.isLeader=false
 	post camionOutConvoi : cam.convoi->isEmpty()
 	
   ratachementCamionConvoi(cam:Camion,conv:Convoi)
