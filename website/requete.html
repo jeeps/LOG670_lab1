@@ -56,7 +56,35 @@
                     <!-- Section title -->
                     <h1 class="display-3">Requêtes</h1>
                     
-                                        
+					<table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th style="width:35%">Requêtes</th>
+                                <th>Détails</th>
+                            </tr>
+
+                            <tr>
+                                <td>
+									<code>
+<pre>
+getConvoiActif(): Sequence(Convoi) = self.convoi->iterate(
+  c:Convoi;List:Sequence(Convoi) = Sequence{} | 
+  if c.camion->one(cam | cam.isLeader) and c.camion->size() >= 2 then
+	List->append(c) 
+  else 
+    List 
+  endif 
+)
+</pre>
+									</code>
+								</td>
+                                <td>
+									<p><b>Récupérer la liste des convois actifs</b></p>
+									<p>Cette liste est obtenu grâce à la fonction présentée dans la colonne de gauche. Noter qu'un convoi actif est un convoi qui contient plus de 2 camions et dont l'un d'entre eux est un leader.</p>
+								</td>
+                            </tr>
+                        </tbody>
+                    </table> 
                 </div>
             </div>
         </div>
