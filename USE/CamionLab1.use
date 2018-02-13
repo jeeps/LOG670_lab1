@@ -122,15 +122,17 @@ operations
 	
   fusionnerConvoi(mainConv: Convoi,list:Set(Convoi))
     begin
-	  declare test : Camion;
-	    test := new Camion;
+	  --declare test : Camion;
+	   -- test := new Camion;
 		
 	  for conv in list do
-        test := conv.camion->any(c:Camion | c.isLeader);
-        test.isLeader := false;		
+        --test := 
+		conv.camion->any(c:Camion | c.isLeader).isLeader := false;
+        --test;		
 	    
 		for cam in conv.camion do
 		  cam.convoiId:=mainConv.ID;
+		  cam.positionConvoi:=mainConv->size()+1;
 		  delete (cam,conv) from Regroupe;
 	      insert(cam,mainConv) into Regroupe 
 		end;
