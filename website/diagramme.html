@@ -60,7 +60,7 @@
 					Voici donc une représentation (sous la forme d'un MDD) de notre système :</p>
 
 					<div class="imgHolder">
-						<img src="../mdd/ebauche_mdd_V2.jpg" alt="Modèle du domaine. (Lab1)" />
+						<img src="../mdd/mdd_final.jpg" alt="Modèle du domaine. (Lab1)" />
 					</div>
 					
 					<div class="emphasis">
@@ -75,10 +75,10 @@
 								
 								<p style="margin-bottom:5px;">Les associations :</p>
 								<ol>
-									<li>&rarr; Camion</li>
-									<li>&rarr; Convoi</li>
-									<li>&rarr; Balise</li>
-									<li>&rarr; Route</li>
+									<li>&rarr; Camion : La centrale communique avec chacun des camions pour leur attribuer une route ou un convoi (la route seuelement si le camion est seul)</li>
+									<li>&rarr; Convoi : La centrale doit pouvoir communiquer avec les convois en tout temps pour les gérer correctement</li>
+									<li>&rarr; Balise : Les routes sont créées à partir des balises donc ceux-ci doivent être surveillée par la centrale</li>
+									<li>&rarr; Route : La centrale crée/modifie/supprime les routes</li>
 								</ol>
 							</li>
 							
@@ -90,8 +90,8 @@
 								
 								<p style="margin-bottom:5px;">Les associations :</p>
 								<ol>
-									<li>&rarr; Centrale</li>
-									<li>&rarr; Convoi</li>
+									<li>&rarr; Centrale : La centrale communique avec chacun des camions pour leur attribuer une route ou un convoi (la route seuelement si le camion est seul)</li>
+									<li>&rarr; Convoi : Les camions peuvent être regroupés par convoi</li>
 								</ol>
 							</li>
 							
@@ -103,9 +103,9 @@
 								
 								<p style="margin-bottom:5px;">Les associations :</p>
 								<ol>
-									<li>&rarr; Centrale</li>
-									<li>&rarr; Camion</li>
-									<li>&rarr; Route</li>
+									<li>&rarr; Centrale : La centrale communique avec chacun des camions pour leur attribuer une route ou un convoi (la route seuelement si le camion est seul)</li>
+									<li>&rarr; Camion : Les camions peuvent être regroupés par convoi</li>
+									<li>&rarr; Route : Les convois ont chacun leur routes (une route peut être associer à plusieur convoi)</li>
 								</ol>
 							</li>
 							
@@ -117,8 +117,8 @@
 								
 								<p style="margin-bottom:5px;">Les associations :</p>
 								<ol>
-									<li>&rarr; Centrale</li>
-									<li>&rarr; Route</li>
+									<li>&rarr; Centrale : Les routes sont créées à partir des balises donc ceux-ci doivent être surveillée par la centrale</li>
+									<li>&rarr; Route : Chaque route est composée de plusieurs balises</li>
 								</ol>
 							</li>
 							
@@ -130,9 +130,9 @@
 								
 								<p style="margin-bottom:5px;">Les associations :</p>
 								<ol>
-									<li>&rarr; Centrale</li>
-									<li>&rarr; Convoi</li>
-									<li>&rarr; Balise</li>
+									<li>&rarr; Centrale : La centrale crée/modifie/supprime les routes</li>
+									<li>&rarr; Convoi : Les convois ont chacun leur routes (une route peut être associer à plusieur convoi)</li>
+									<li>&rarr; Balise : Chaque route est composée de plusieurs balises</li>
 								</ol>
 							</li>
 						</ul>

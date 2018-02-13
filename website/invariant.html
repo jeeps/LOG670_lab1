@@ -55,45 +55,13 @@
                 <div class="col-md-12">
                     <!-- Section title -->
                     <h1 class="display-3">Invariants</h1>
+					<small>*Voir la preuve de consistance au bas de la page</small>
 
                     <table class="table table-bordered">
                         <tbody>
                             <tr>
                                 <th style="width:35%">Invariants</th>
                                 <th>Détails</th>
-                            </tr>
-
-                            <tr>
-                                <td>
-									<code>
-<pre>
-context self : Convoi 
-  inv ConvoiActif: 
-    (self.appartient->one( c:Camion | c.isLeader ) 
-	and (self.appartient->size() >= 2))
-</pre>
-									</code>
-								</td>
-                                <td>
-									<p><b>Convoi Actif</b></p>
-									<p>Le rôle de cet invariant est de s'asurer que chacun de nos convois contient un minimum de 2 camions et qu'au moins l'un d'entre est le leader.</p>
-								</td>
-                            </tr>
-							
-							<tr>
-                                <td>
-									<code>
-<pre>
-context self : Camion 
-  inv leaderEnAvant:   
-    (self.isLeader implies (self.positionConvoi = 1)) 
-</pre>
-									</code>
-								</td>
-                                <td>
-									<p><b>Le leader devant</b></p>
-									<p>Ici, l'objectif de vérifier si la position des camions dans le convoi fait du sens. C'est-à-dire, le leader en premier et les autres ensuite.</p>
-								</td>
                             </tr>
 							
 							<tr>
@@ -114,7 +82,9 @@ context self : Camion 
 								</td>
                                 <td>
 									<p><b>Camion seul</b></p>
-									<p>Ici, l'objectif de vérifier si la position des camions dans le convoi fait du sens. C'est-à-dire, le leader en premier et les autres ensuite.</p>
+									<p>On vérifie qu'un camion seul (convoiId = 0 ou undef), a une route associée.</p>
+									
+									<img width="100%" src="preuves/B1.jpg" alt="" />
 								</td>
                             </tr>
 							
@@ -134,7 +104,46 @@ context self : Camion 
 								</td>
                                 <td>
 									<p><b>Camion dans un convoi</b></p>
+									<p>Ici on vérifie que le id d'un convoi se propage dans la propriété convoiID des camions qui lui sont associés. (la propriété routID n'est pas nécessaire pour un camion dans un convoi)</p>
+									
+									<img width="100%" src="preuves/B2.jpg" alt="" />
+								</td>
+                            </tr>
+							
+							<tr>
+                                <td>
+									<code>
+<pre>
+context self : Camion 
+  inv leaderEnAvant:   
+    (self.isLeader implies (self.positionConvoi = 1)) 
+</pre>
+									</code>
+								</td>
+                                <td>
+									<p><b>Le leader devant</b></p>
 									<p>Ici, l'objectif de vérifier si la position des camions dans le convoi fait du sens. C'est-à-dire, le leader en premier et les autres ensuite.</p>
+									
+									<img width="100%" src="preuves/B3.jpg" alt="" />
+								</td>
+                            </tr>
+
+                            <tr>
+                                <td>
+									<code>
+<pre>
+context self : Convoi 
+  inv ConvoiActif: 
+    (self.appartient->one( c:Camion | c.isLeader ) 
+	and (self.appartient->size() >= 2))
+</pre>
+									</code>
+								</td>
+                                <td>
+									<p><b>Convoi Actif</b></p>
+									<p>Le rôle de cet invariant est de s'asurer que chacun de nos convois contient un minimum de 2 camions et qu'au moins l'un d'entre eux est un leader.</p>
+									
+									<img width="100%" src="preuves/B4.jpg" alt="" />
 								</td>
                             </tr>
 							
@@ -151,12 +160,23 @@ context self : Route 
                                 <td>
 									<p><b>Balise active</b></p>
 									<p>Pour qu'une balise soit autorisé dans une route, celle-ci doit être fonctionnelle. Cet invariant vérifie que toutes les balises ont un status "Online".</p>
+									
+									<img width="100%" src="preuves/B5.jpg" alt="" />
 								</td>
                             </tr>
                         </tbody>
                     </table>  
                 </div>
             </div>
+			
+			<div class="row">
+				<div class="col-md-12">
+					<!-- Section title -->
+                    <h3 class="display-3">Preuve de consistance</h3>
+					
+					<img width="100%" src="preuves/consistance.jpg" alt="" />
+				</div>
+			</div>
         </div>
         <!-- //END Main content -->
     </body>
