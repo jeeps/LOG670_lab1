@@ -47,3 +47,25 @@
 !Camion1.routeId := 1
 !Camion2.routeId := 1
 !Camion3.routeId := 1
+!Camion1.isLeader := false
+!Camion1.isLeader := true
+!Camion3.convoiId := 0
+!Camion3.routeId := 2
+!Camion3.convoiId := 1
+!Camion3.routeId := 1
+!Camion1.isLeader := false
+!Camion1.isLeader := true
+!Camion1.routeId := 2
+!Camion1.routeId := 1
+!Balise1.status := false
+!Balise1.status := true
+!Camion1.positionConvoi := 2
+!Camion2.positionConvoi := 1
+!delete (Camion2,Convoi1) from Regroupe
+!delete (Camion3,Convoi1) from Regroupe
+!insert (Camion3,Convoi1) into Regroupe
+!Camion1.positionConvoi := 1
+!Camion2.positionConvoi := 2
+!Camion3.positionConvoi := 2
+!Camion2.convoiId := 0
+!Camion2.positionConvoi := 0
