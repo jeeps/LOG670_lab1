@@ -47,3 +47,14 @@
 !Camion1.routeId := 1
 !Camion2.routeId := 1
 !Camion3.routeId := 1
+!Camion1.isLeader := false
+!Camion1.isLeader := true
+!Camion3.convoiId := 0
+!Camion3.routeId := 2
+!Camion3.convoiId := 1
+!Camion3.routeId := 1
+!Camion1.isLeader := false
+!Camion1.isLeader := true
+!Camion1.routeId := 2
+!Camion1.routeId := 1
+!Balise1.status := false

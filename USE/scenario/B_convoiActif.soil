@@ -47,3 +47,4 @@
 !Camion1.routeId := 1
 !Camion2.routeId := 1
 !Camion3.routeId := 1
+!Camion1.isLeader := false
