@@ -104,6 +104,21 @@ operations
 		delete (conv,self) from Gere;
 		destroy conv end;
 	end
+	
+  --diviserConvoi(mainConv: Convoi, nbrConvoi:Integer): Sequence(Convoi)=
+    --begin
+	  --declare test : Camion;
+	  --test := new Camion;
+	  --for conv in list do
+        --test:=conv.camion->any(c:Camion|c.isLeader);
+        --test.isLeader:= false;		
+	    --for cam in conv.camion do
+		  --cam.ID:=mainConv.ID;
+		  --delete (cam,conv) from Regroupe;
+	      --insert(cam,mainConv) into Regroupe end;
+		--delete (conv,self) from Gere;
+		--destroy conv end;
+	--end
 end
 
 
