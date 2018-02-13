@@ -59,12 +59,15 @@ operations
   
   dissocierConvoi(conv : Convoi)
     begin
-      declare test : Camion;
-	    test := new Camion;
-	    test := conv.camion->any(c:Camion | c.isLeader);
-	    test.isLeader := false;
+      --declare test : Camion;
+	   -- test := new Camion;
+	    --test := 
+		conv.camion->any(c:Camion | c.isLeader).isLeader:=false;
+	    --test.isLeader := false;
 	  
 	  for cam in conv.camion do 
+	    cam.convoiId:=0;
+		cam.positionConvoi:=0;
 	    delete(cam,conv) from Regroupe 
 	  end; 
     end
@@ -75,24 +78,35 @@ operations
     begin
       declare conv : Convoi;
 	    conv := new Convoi;
+		conv.ID:= 3;
+	    conv.routeId:=1;
 	  
 	  insert (conv,self) into Gere;
 	  
 	  for cam in list do 
-	    insert(cam,conv) into Regroupe 
+	    if conv.camion->isEmpty() then
+		  cam.positionConvoi:=1;
+		  cam.isLeader:=true;
+		  cam.convoiId:=conv.ID;
+		  insert(cam,conv) into Regroupe 
+		else
+		  insert(cam,conv) into Regroupe;
+          cam.positionConvoi:=conv.camion->size()+1;
+		  cam.convoiId:=conv.ID
+		end;  
 	  end;
     end
 	
   modifierLeader(conv: Convoi, camLeader: Camion, camNotLeader: Camion)
 	begin
-		for cam in conv.camion do
-		  if cam.positionConvoi < camNotLeader.positionConvoi then
-		  cam.positionConvoi := cam.positionConvoi+1 
-		  end
-		end;
-		--declare pos:Integer; 
-	    --pos := camNotLeader.positionConvoi;
-	    --camLeader.positionConvoi := pos;
+		--for cam in conv.camion do
+		--  if cam.positionConvoi < camNotLeader.positionConvoi then
+		--  cam.positionConvoi := cam.positionConvoi+1 
+		--  end
+		--end;
+		declare pos:Integer; 
+	    pos := camNotLeader.positionConvoi;
+	    camLeader.positionConvoi := pos;
 	    camNotLeader.positionConvoi := 1;
 	    camNotLeader.isLeader := true;
 	    camLeader.isLeader := false;
@@ -130,31 +144,42 @@ operations
     begin
 	  declare test : Convoi;
 	  test := new Convoi;
-	  --test.ID:= 1;
+	  test.ID:= 2;
+	  test.routeId:=1;
 	  newLeader.convoiId:=test.ID;
 	  newLeader.positionConvoi:=1;
 	  newLeader.isLeader:=true;
 	  delete (newLeader,mainConv) from Regroupe;
 	  insert(newLeader,test) into Regroupe;		
 	  for cam in listCam do
-		--cam.ID:=test.ID;
+		cam.convoiId:=test.ID;
 		delete (cam,mainConv) from Regroupe;
-	    insert(cam,test) into Regroupe 
+	    insert(cam,test) into Regroupe;
+		cam.positionConvoi:= test.camion->size()+1;
+		cam.isLeader:=false
 	  end;
 	end
 	
   detachementCamionConvoi(cam:Camion)
     begin
+	  
+	  for c in cam.convoi.camion do
+		  if c.positionConvoi > cam.positionConvoi then
+		  c.positionConvoi := cam.positionConvoi-1 
+		  end
+		end;
 	  delete (cam,cam.convoi) from Regroupe;
 	  cam.isLeader:=false;
 	  cam.positionConvoi:=null;
 	  cam.convoiId:=null;
 	end
+	pre camionInConvoi: cam.convoi->notEmpty()
+	post camionOutConvoi : cam.convoi->isEmpty()
 	
   ratachementCamionConvoi(cam:Camion,conv:Convoi)
     begin
 	  insert (cam,conv) into Regroupe;
-	  cam.positionConvoi:=conv.camion->size()+1;
+	  cam.positionConvoi:=conv.camion->size();
 	  cam.convoiId:=conv.ID;
 	end
 end
