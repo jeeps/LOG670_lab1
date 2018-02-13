@@ -84,13 +84,19 @@ operations
     end
 	
   modifierLeader(conv: Convoi, camLeader: Camion, camNotLeader: Camion)
-    begin
-	  declare pos:Integer; 
-	    pos := camNotLeader.positionConvoi;
-	    camLeader.positionConvoi := pos;
+	begin
+		for cam in conv.camion do
+		  if cam.positionConvoi < camNotLeader.positionConvoi then
+		  cam.positionConvoi := cam.positionConvoi+1 
+		  end
+		end;
+		--declare pos:Integer; 
+	    --pos := camNotLeader.positionConvoi;
+	    --camLeader.positionConvoi := pos;
 	    camNotLeader.positionConvoi := 1;
 	    camNotLeader.isLeader := true;
 	    camLeader.isLeader := false;
+		
 	end
 	
 	pre camionInConvoi: conv.camion->includesAll(Set{camLeader,camNotLeader})
@@ -110,7 +116,7 @@ operations
         test.isLeader := false;		
 	    
 		for cam in conv.camion do
-		  cam.ID:=mainConv.ID;
+		  cam.convoiId:=mainConv.ID;
 		  delete (cam,conv) from Regroupe;
 	      insert(cam,mainConv) into Regroupe 
 		end;
@@ -125,7 +131,8 @@ operations
 	  declare test : Convoi;
 	  test := new Convoi;
 	  --test.ID:= 1;
-	  --newLeader.ID:=test.ID;
+	  newLeader.convoiId:=test.ID;
+	  newLeader.positionConvoi:=1;
 	  newLeader.isLeader:=true;
 	  delete (newLeader,mainConv) from Regroupe;
 	  insert(newLeader,test) into Regroupe;		
@@ -134,6 +141,21 @@ operations
 		delete (cam,mainConv) from Regroupe;
 	    insert(cam,test) into Regroupe 
 	  end;
+	end
+	
+  detachementCamionConvoi(cam:Camion)
+    begin
+	  delete (cam,cam.convoi) from Regroupe;
+	  cam.isLeader:=false;
+	  cam.positionConvoi:=null;
+	  cam.convoiId:=null;
+	end
+	
+  ratachementCamionConvoi(cam:Camion,conv:Convoi)
+    begin
+	  insert (cam,conv) into Regroupe;
+	  cam.positionConvoi:=conv.camion->size()+1;
+	  cam.convoiId:=conv.ID;
 	end
 end
 
