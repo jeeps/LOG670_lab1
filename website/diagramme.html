@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
     <head>
         <!-- CSS -->
@@ -56,11 +56,11 @@
 					<!-- Section title -->
 					<h1 class="display-3">Diagrammes de classes</h1>
 
-					<p>Le diagramme de classes présenté permet de comprendre le monde dans lequel évolue notre convoi de camion, mais également de comprendre le lien entre chacun des éléments. 
+					<p>Le diagramme de classes présenté permet de comprendre le monde dans lequel évolue notre convoi de camions, mais également de comprendre le lien entre chacun des éléments. 
 					Voici donc une représentation (sous la forme d'un MDD) de notre système :</p>
 
 					<div class="imgHolder">
-						<img src="../mdd/mdd_final.jpg" alt="Modèle du domaine. (Lab1)" />
+						<img src="mdd_final.JPG" alt="Modèle du domaine. (Lab1)" />
 					</div>
 					
 					<div class="emphasis">
@@ -70,14 +70,14 @@
 							<li>
 								<p> 
 									<u>Centrale</u> <br>
-									La centrale est le gestionnaire principale. C'est cette classe qui permet de communiquer avec chacun des camions individuellement ou avec les convois. Elle à également le rôle de suiveiller le réseau et gérer les routes.
+									La centrale est le gestionnaire principal. C'est cette classe qui permet de communiquer avec chacun des camions individuellement ou avec les convois. Elle a également le rôle de suiveiller le réseau et gérer les routes.
 								</p>
 								
 								<p style="margin-bottom:5px;">Les associations :</p>
 								<ol>
-									<li>&rarr; Camion : La centrale communique avec chacun des camions pour leur attribuer une route ou un convoi (la route seuelement si le camion est seul)</li>
+									<li>&rarr; Camion : La centrale communique avec chacun des camions pour leur attribuer une route ou un convoi (la route seulement si le camion est seul)</li>
 									<li>&rarr; Convoi : La centrale doit pouvoir communiquer avec les convois en tout temps pour les gérer correctement</li>
-									<li>&rarr; Balise : Les routes sont créées à partir des balises donc ceux-ci doivent être surveillée par la centrale</li>
+									<li>&rarr; Balise : Les routes sont créées à partir des balises donc ceux-ci doivent être surveillés par la centrale</li>
 									<li>&rarr; Route : La centrale crée/modifie/supprime les routes</li>
 								</ol>
 							</li>
@@ -90,7 +90,7 @@
 								
 								<p style="margin-bottom:5px;">Les associations :</p>
 								<ol>
-									<li>&rarr; Centrale : La centrale communique avec chacun des camions pour leur attribuer une route ou un convoi (la route seuelement si le camion est seul)</li>
+									<li>&rarr; Centrale : La centrale communique avec chacun des camions pour leur attribuer une route ou un convoi (la route seulement si le camion est seul)</li>
 									<li>&rarr; Convoi : Les camions peuvent être regroupés par convoi</li>
 								</ol>
 							</li>
@@ -103,9 +103,9 @@
 								
 								<p style="margin-bottom:5px;">Les associations :</p>
 								<ol>
-									<li>&rarr; Centrale : La centrale communique avec chacun des camions pour leur attribuer une route ou un convoi (la route seuelement si le camion est seul)</li>
+									<li>&rarr; Centrale : La centrale communique avec chacun des camions pour leur attribuer une route ou un convoi (la route seulement si le camion est seul)</li>
 									<li>&rarr; Camion : Les camions peuvent être regroupés par convoi</li>
-									<li>&rarr; Route : Les convois ont chacun leur routes (une route peut être associer à plusieur convoi)</li>
+									<li>&rarr; Route : Les convois ont chacun leur route (une route peut être associée à plusieur convoi)</li>
 								</ol>
 							</li>
 							
@@ -117,7 +117,7 @@
 								
 								<p style="margin-bottom:5px;">Les associations :</p>
 								<ol>
-									<li>&rarr; Centrale : Les routes sont créées à partir des balises donc ceux-ci doivent être surveillée par la centrale</li>
+									<li>&rarr; Centrale : Les routes sont créées à partir des balises donc ceux-ci doivent être surveillés par la centrale</li>
 									<li>&rarr; Route : Chaque route est composée de plusieurs balises</li>
 								</ol>
 							</li>
@@ -131,7 +131,7 @@
 								<p style="margin-bottom:5px;">Les associations :</p>
 								<ol>
 									<li>&rarr; Centrale : La centrale crée/modifie/supprime les routes</li>
-									<li>&rarr; Convoi : Les convois ont chacun leur routes (une route peut être associer à plusieur convoi)</li>
+									<li>&rarr; Convoi : Les convois ont chacun leur route (une route peut être associée à plusieur convoi)</li>
 									<li>&rarr; Balise : Chaque route est composée de plusieurs balises</li>
 								</ol>
 							</li>

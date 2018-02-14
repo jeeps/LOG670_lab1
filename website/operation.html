@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
     <head>
         <!-- CSS -->
@@ -67,20 +67,335 @@
                                 <td>
 									<code>
 <pre>
-context self : Convoi 
-  inv ConvoiActif: 
-    (self.appartient->one( c:Camion | c.isLeader ) 
-	and (self.appartient->size() >= 2))
+-- Operation #1 
+-- Dissocie un convoi
+-- @param conv = le convoi à separer
+dissocierConvoi(conv : Convoi)
+  begin
+   conv.camion->any(c:Camion|c.isLeader).isLeader := false;
+
+    for cam in conv.camion do 
+      cam.convoiId := 0;
+      cam.positionConvoi := 0;
+      delete(cam,conv) from Regroupe;		
+    end; 
+
+  delete (conv,self) from Gere;
+  delete (conv,conv.route) from Contenir2;
+  destroy conv
+end
+
+pre convoiExist: self.convoi->includes(conv)
+
+post convoiExistePlus: conv.oclIsUndefined()
 </pre>
 									</code>
 								</td>
                                 <td>
-									<p><b>Convoi Actif</b></p>
-									<p>Le rôle de cet invariant est de s'asurer que chacun de nos convois contient un minimum de 2 camions et qu'au moins l'un d'entre est le leader.</p>
+									<p><b>Dissociation d'un convoi</b></p>
+									<p>Cette opération, tel que son nom l'indique, permet de dissocier un convoi actif.</p>
+									
+									<p><b>Pré-conditions</b></p>
+									<p>1. ConvoiExist : S'assure que le convoi que nous tentons de dissocier fait bien partie de la liste des convois actifs.</p>
+									
+									<p><b>Post-conditions</b></p>
+									<p>1. ConvoiExistePlus : S'assure que le convoi qui vient d'être dissocier n'existe plus.</p>
+								</td>
+                            </tr>
+							<tr>
+                                <td colspan=2>
+									<div style="float:left; width:50%">
+										<p><b>Démonstration positive</b></p>
+										
+										<img width="85%" src="preuves/D1S.JPG" alt="" />
+									</div>
+									
+									<div width="50%" style="float:left; width:50%">
+										<p><b>Démonstration négative</b></p>
+										
+										<img width="85%" src="preuves/D1N.JPG" alt="" />
+									</div>
 								</td>
                             </tr>
                         </tbody>
                     </table> 
+					
+					
+					
+					<table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th style="width:35%">Opérations</th>
+                                <th>Détails</th>
+                            </tr>
+
+                            <tr>
+                                <td>
+									<code>
+<pre>
+-- Operation #2
+-- Cree un nouveau convoi
+-- @param list = liste des camions à insérer dans le convoi
+creerConvoi(list:Set(Camion)) 
+begin
+  declare conv : Convoi;
+	conv := new Convoi;
+	conv.ID:= 3;
+	conv.routeId:=1;
+  
+  insert (conv,self) into Gere;
+
+  for cam in list do 
+	if conv.camion->isEmpty() then
+	  cam.positionConvoi:=1;
+	  cam.isLeader:=true;
+	  cam.convoiId:=conv.ID;
+	  insert(cam,conv) into Regroupe;
+	  insert (conv,self.route->any(r|r.ID=cam.routeId)) into Contenir2;
+	else
+	  insert(cam,conv) into Regroupe;
+	  cam.positionConvoi:=conv.camion->size();
+	  cam.convoiId:=conv.ID
+	end;  
+  end;
+end
+</pre>
+									</code>
+								</td>
+                                <td>
+									<p><b>Création d'un nouveau convoi</b></p>
+									<p>On passe en paramètre une liste de camion que l'on désire regrouper en convoi et le statut de "leader" est attribué automatiquement au camion qui mène le nouveau convoi. <br> *Noter que l'opération #1 a été effectuée avant de créer un nouveau convoi</p>
+									
+									<p><b>Pré-conditions</b></p>
+									<p>Aucune</p>
+									
+									<p><b>Post-conditions</b></p>
+									<p>Aucune</p>
+								</td>
+                            </tr>
+							<tr>
+                                <td colspan=2>
+									<div style="float:left; width:50%">
+										<p><b>Démonstration positive</b></p>
+										
+										<img width="85%" src="preuves/D2S.JPG" alt="" />
+									</div>
+									
+									<div width="50%" style="float:left; width:50%">
+										<p><b>Démonstration négative</b> (obtenue en ajoutant un camion inexistant à un convoi)</p>
+										
+										<img width="85%" src="preuves/D2N.JPG" alt="" />
+									</div>
+								</td>
+                            </tr>
+                        </tbody>
+                    </table>
+					
+					
+					
+					<table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th style="width:35%">Opérations</th>
+                                <th>Détails</th>
+                            </tr>
+
+                            <tr>
+                                <td>
+									<code>
+<pre>
+-- Operation #3
+-- Changer le leader d'un convoi par un autre camion dans le convoi
+-- @param conv = le convoi
+-- @param camLeader = le leader du convoi
+-- @param camNotLeader = le camion qui va devenir leader
+modifierLeader(conv: Convoi, camLeader: Camion, camNotLeader: Camion)
+begin
+	declare pos:Integer; 
+	pos := camNotLeader.positionConvoi;
+	camLeader.positionConvoi := pos;
+	camNotLeader.positionConvoi := 1;
+	camNotLeader.isLeader := true;
+	camLeader.isLeader := false;
+end
+
+pre camionInConvoi: conv.camion->includesAll(Set{camLeader,camNotLeader})
+pre leaderIsLeader: camLeader.positionConvoi = 1 and camLeader.isLeader = true
+pre notLeaderIsNotLeader: camNotLeader.positionConvoi > 1 and camNotLeader.isLeader = false
+
+post leaderIsNotLeader: camLeader.positionConvoi > 1 and camLeader.isLeader = false
+post notLeaderIsLeader: camNotLeader.positionConvoi = 1 and camNotLeader.isLeader = true
+</pre>
+									</code>
+								</td>
+                                <td>
+									<p><b>Modification du camion "Leader"</b></p>
+									<p>Permet de modifier le "Leader" d'un convoi actif. Le paramètre #1 est le "Leader" actuel et le #2 est le camion qui deviendra "Leader".</p>
+									
+									<p><b>Pré-conditions</b></p>
+									<p>1. camionInConvoi : On s'assure que les deux camions font bien partie du convoi </p>
+									<p>2. leaderIsLeader : On s'assure que le "Leader" actuel est le bon et à la bonne position</p>
+									<p>3. notLeaderIsNotLeader : On s'assure que le nouveau "Leader" n'a pas déjà ce statut</p>
+									
+									<p><b>Post-conditions</b></p>
+									<p>1. leaderIsNotLeader : On s'assure que l'ancien "Leader" ne l'est plus</p>
+									<p>2. notLeaderIsLeader : On s'assure que le nouveau camion est bien le nouveau "Leader"</p>
+								</td>
+                            </tr>
+							<tr>
+                                <td colspan=2>
+									<div style="float:left; width:50%">
+										<p><b>Démonstration positive</b></p>
+										
+										<img width="85%" src="preuves/D3S.JPG" alt="" />
+									</div>
+									
+									<div width="50%" style="float:left; width:50%">
+										<p><b>Démonstration négative</b> (Obtenue en passant un camion inexistant en paramètre)</p>
+										
+										<img width="85%" src="preuves/D3N.JPG" alt="" />
+									</div>
+								</td>
+                            </tr>
+                        </tbody>
+                    </table>
+					
+					
+					
+					<table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th style="width:35%">Opérations</th>
+                                <th>Détails</th>
+                            </tr>
+
+                            <tr>
+                                <td>
+									<code>
+<pre>
+-- Operation #4 
+-- Fusionner deux convoi ensemble
+-- @param conv = le convoi
+-- @param list = liste des autres convois à fusionner
+fusionnerConvoi(mainConv: Convoi,list:Set(Convoi))
+begin		
+  for conv in list do
+	conv.camion->any(c:Camion | c.isLeader).isLeader := false;
+	
+	for cam in conv.camion do
+	  cam.convoiId:=mainConv.ID;
+	  cam.positionConvoi:=mainConv.camion->size()+1;
+	  delete (cam,conv) from Regroupe;
+	  insert(cam,mainConv) into Regroupe 
+	end;
+	
+	delete (conv,self) from Gere;
+	destroy conv 
+  end;
+end
+</pre>
+									</code>
+								</td>
+                                <td>
+									<p><b>Fusion de deux convois</b></p>
+									<p>Cette opération permet de fusionner deux convois ensemble</p>
+									
+									<p><b>Pré-conditions</b></p>
+									<p>Aucune</p>
+									
+									<p><b>Post-conditions</b></p>
+									<p>Aucune</p>
+								</td>
+                            </tr>
+							<tr>
+                                <td colspan=2>
+									<div style="float:left; width:50%">
+										<p><b>Démonstration positive</b></p>
+										
+										<img width="85%" src="preuves/D4S.JPG" alt="" />
+									</div>
+									
+									<div width="50%" style="float:left; width:50%">
+										<p><b>Démonstration négative</b> (Obtenue en passant en paramètre un convoi qui n'existe pas. Le même résultat aurait pu être atteint en passant un convoi qui n'est pas actif.)</p>
+										
+										<img width="85%" src="preuves/D4N.JPG" alt="" />
+									</div>
+								</td>
+                            </tr>
+                        </tbody>
+                    </table>
+					
+					
+					
+					<table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th style="width:35%">Opérations</th>
+                                <th>Détails</th>
+                            </tr>
+
+                            <tr>
+                                <td>
+									<code>
+<pre>
+-- Operation #5 
+-- Diviser un convoi
+-- @param conv = le convoi a separer
+-- @param newLeader = Nouveau leader du convoi
+-- @param listCam = liste des camions
+diviserConvoi(mainConv: Convoi, newLeader:Camion, listCam:Set(Camion))
+begin
+  declare test : Convoi;
+  test := new Convoi;
+  test.ID:= 2;
+  test.routeId:=1;
+  
+  newLeader.convoiId:=test.ID;
+  newLeader.positionConvoi:=1;
+  newLeader.isLeader:=true;
+  
+  delete (newLeader,mainConv) from Regroupe;
+  insert(newLeader,test) into Regroupe;	
+  
+  for cam in listCam do
+	cam.convoiId:=test.ID;
+	delete (cam,mainConv) from Regroupe;
+	insert(cam,test) into Regroupe;
+	cam.positionConvoi:= test.camion->size()+1;
+	cam.isLeader:=false
+  end;
+end
+</pre>
+									</code>
+								</td>
+                                <td>
+									<p><b>Division d'un convoi</b></p>
+									<p>Permet de diviser un convoi selon les camions que l'on passe en paramètre. Il est important de spécifier lequel de ces camions sera le nouveau leader. *Le nouveau leader doit être également dans la liste (param #3)</p>
+									
+									<p><b>Pré-conditions</b></p>
+									<p>Aucune</p>
+									
+									<p><b>Post-conditions</b></p>
+									<p>Aucune</p>
+								</td>
+                            </tr>
+							<tr>
+                                <td colspan=2>
+									<div style="float:left; width:50%">
+										<p><b>Démonstration positive</b></p>
+										
+										<img width="85%" src="preuves/D5S.JPG" alt="" />
+									</div>
+									
+									<div width="50%" style="float:left; width:50%">
+										<p><b>Démonstration négative</b></p>
+										
+										<img width="85%" src="preuves/D5N.JPG" alt="" />
+									</div>
+								</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
     <head>
         <!-- CSS -->
@@ -84,7 +84,7 @@ context self : Camion 
 									<p><b>Camion seul</b></p>
 									<p>On vérifie qu'un camion seul (convoiId = 0 ou undef), a une route associée.</p>
 									
-									<img width="100%" src="preuves/B1.jpg" alt="" />
+									<img width="100%" src="preuves/B1.JPG" alt="" />
 								</td>
                             </tr>
 							
@@ -104,9 +104,9 @@ context self : Camion 
 								</td>
                                 <td>
 									<p><b>Camion dans un convoi</b></p>
-									<p>Ici on vérifie que le id d'un convoi se propage dans la propriété convoiID des camions qui lui sont associés. (la propriété routID n'est pas nécessaire pour un camion dans un convoi)</p>
+									<p>Ici on vérifie que le id d'un convoi se propage dans la propriété convoiID des camions qui lui sont associés. (la propriété routeID n'est pas nécessaire pour un camion dans un convoi)</p>
 									
-									<img width="100%" src="preuves/B2.jpg" alt="" />
+									<img width="100%" src="preuves/B2.JPG" alt="" />
 								</td>
                             </tr>
 							
@@ -122,9 +122,9 @@ context self : Camion 
 								</td>
                                 <td>
 									<p><b>Le leader devant</b></p>
-									<p>Ici, l'objectif de vérifier si la position des camions dans le convoi fait du sens. C'est-à-dire, le leader en premier et les autres ensuite.</p>
+									<p>Ici, l'objectif est de vérifier si la position des camions dans le convoi fait du sens. C'est-à-dire, le leader en premier et les autres ensuite.</p>
 									
-									<img width="100%" src="preuves/B3.jpg" alt="" />
+									<img width="100%" src="preuves/B3.JPG" alt="" />
 								</td>
                             </tr>
 
@@ -141,9 +141,9 @@ context self : Convoi 
 								</td>
                                 <td>
 									<p><b>Convoi Actif</b></p>
-									<p>Le rôle de cet invariant est de s'asurer que chacun de nos convois contient un minimum de 2 camions et qu'au moins l'un d'entre eux est un leader.</p>
+									<p>Le rôle de cet invariant est de s'assurer que chacun de nos convois contient un minimum de 2 camions et qu'au moins l'un d'entre eux est un leader.</p>
 									
-									<img width="100%" src="preuves/B4.jpg" alt="" />
+									<img width="100%" src="preuves/B4.JPG" alt="" />
 								</td>
                             </tr>
 							
@@ -159,9 +159,9 @@ context self : Route 
 								</td>
                                 <td>
 									<p><b>Balise active</b></p>
-									<p>Pour qu'une balise soit autorisé dans une route, celle-ci doit être fonctionnelle. Cet invariant vérifie que toutes les balises ont un status "Online".</p>
+									<p>Pour qu'une balise soit autorisée dans une route, celle-ci doit être fonctionnelle. Cet invariant vérifie que toutes les balises ont un status "Online".</p>
 									
-									<img width="100%" src="preuves/B5.jpg" alt="" />
+									<img width="100%" src="preuves/B5.JPG" alt="" />
 								</td>
                             </tr>
                         </tbody>
@@ -174,7 +174,7 @@ context self : Route 
 					<!-- Section title -->
                     <h3 class="display-3">Preuve de consistance</h3>
 					
-					<img width="100%" src="preuves/consistance.jpg" alt="" />
+					<img width="100%" src="preuves/consistance.JPG" alt="" />
 				</div>
 			</div>
         </div>
