@@ -162,6 +162,9 @@ operations
 	  test.ID:= 2;
 	  test.routeId:=1;
 	  
+	  insert(test,self) into Gere;	
+	  insert (test,self.route->any(r|r.ID=newLeader.routeId)) into Contenir2;
+	  
 	  delete (newLeader,mainConv) from Regroupe;
 	  insert(newLeader,test) into Regroupe;	
 	  
@@ -173,7 +176,7 @@ operations
 		cam.convoiId:=test.ID;
 		delete (cam,mainConv) from Regroupe;
 	    insert(cam,test) into Regroupe;
-		cam.positionConvoi:= test.camion->size()+1;
+		cam.positionConvoi:= test.camion->size();
 		cam.isLeader:=false
 	  end;
 	end
