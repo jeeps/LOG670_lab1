@@ -1,0 +1,285 @@
+-- Exemple adaptŽ du cours : CIS 771 Software Specifications
+-- Auteur: John Hatcliff
+-- Date: 6 mars 2002
+--
+-- Pour les cours : MGL806 MŽthodes formelles et semi-formelles
+--                  LOG310 Langages formels et semi-formels
+-- Révision: Sylvie RattŽ
+-- Date: 11 février 2005
+-- Modification 14 janvier 2012
+--
+-- Fichier: CamionLab1.use
+--
+-- Description:
+-- Le modle "Camion" en USE OCL
+-- comportant uniquement des classes et des attributs.
+--
+
+--
+
+model CamionLab1
+
+-- classes
+
+class Camion
+attributes
+  ID : Integer
+  isLeader : Boolean
+  convoiId : Integer -- ID du convoi qui contient ce camion (peut être null)
+  positionConvoi : Integer -- Position dans le convoi (peut être null)
+  routeId : Integer -- ID de la route que suit le camion (vide si le dans un convoi? nécessaire?)
+operations
+  addToConvoi() : Integer
+  = ID
+  removeFromConvoi() : Integer
+  setRoute() : Integer
+end
+
+class Convoi
+attributes
+  ID : Integer
+  routeId : Integer  -- ID de la route que suit le convoi (ne peut pas être null)
+operations
+  setRoute() : Integer
+  getRoute() : Integer
+end
+
+class Central
+attributes
+  id: Integer
+operations
+  getConvoiActif(): Sequence(Convoi) = self.convoi->iterate(
+    c:Convoi;List:Sequence(Convoi)= Sequence{} | 
+    if c.camion->one(cam | cam.isLeader) and c.camion->size()>=2 then
+	  List->append(c) 
+    else 
+      List 
+    endif 
+  )
+  
+  dissocierConvoi(conv : Convoi)
+    begin
+      --declare test : Camion;
+	   -- test := new Camion;
+	    --test := 
+		conv.camion->any(c:Camion | c.isLeader).isLeader:=false;
+	    --test.isLeader := false;
+	  
+	  for cam in conv.camion do 
+	    cam.convoiId:=0;
+		cam.positionConvoi:=0;
+	    delete(cam,conv) from Regroupe;		
+	  end; 
+	  delete (conv,self) from Gere;
+	  delete (conv,conv.route) from Contenir2;
+      destroy conv
+    end
+    pre convoiExist: self.convoi->includes(conv)
+    --post convoiExistePlus: self.convoi=self.convoi@pre->excluding(conv)
+	post convoiExistePlus: conv.oclIsUndefined()
+	
+  creerConvoi(list:Set(Camion)) 
+    begin
+      declare conv : Convoi;
+	    conv := new Convoi;
+		conv.ID:= 3;
+	    conv.routeId:=1;
+	  
+	  insert (conv,self) into Gere;
+
+	  
+	  for cam in list do 
+	    if conv.camion->isEmpty() then
+		  cam.positionConvoi:=1;
+		  cam.isLeader:=true;
+		  cam.convoiId:=conv.ID;
+		  insert(cam,conv) into Regroupe;
+		  insert (conv,self.route->any(r|r.ID=cam.routeId)) into Contenir2;
+		else
+		  insert(cam,conv) into Regroupe;
+          cam.positionConvoi:=conv.camion->size();
+		  cam.convoiId:=conv.ID
+		end;  
+	  end;
+    end
+	
+  modifierLeader(conv: Convoi, camLeader: Camion, camNotLeader: Camion)
+	begin
+		--for cam in conv.camion do
+		--  if cam.positionConvoi < camNotLeader.positionConvoi then
+		--  cam.positionConvoi := cam.positionConvoi+1 
+		--  end
+		--end;
+		declare pos:Integer; 
+	    pos := camNotLeader.positionConvoi;
+	    camLeader.positionConvoi := pos;
+	    camNotLeader.positionConvoi := 1;
+	    camNotLeader.isLeader := true;
+	    camLeader.isLeader := false;
+		
+	end
+	
+	pre camionInConvoi: conv.camion->includesAll(Set{camLeader,camNotLeader})
+	pre leaderIsLeader: camLeader.positionConvoi = 1 and camLeader.isLeader = true
+	pre notLeaderIsNotLeader: camNotLeader.positionConvoi > 1 and camNotLeader.isLeader = false
+	
+	post leaderIsNotLeader: camLeader.positionConvoi > 1 and camLeader.isLeader = false
+	post notLeaderIsLeader: camNotLeader.positionConvoi = 1 and camNotLeader.isLeader = true
+	
+  fusionnerConvoi(mainConv: Convoi,list:Set(Convoi))
+    begin
+	  --declare test : Camion;
+	   -- test := new Camion;
+		
+	  for conv in list do
+        --test := 
+		conv.camion->any(c:Camion | c.isLeader).isLeader := false;
+        --test;		
+	    
+		for cam in conv.camion do
+		  cam.convoiId:=mainConv.ID;
+		  cam.positionConvoi:=mainConv.camion->size()+1;
+		  delete (cam,conv) from Regroupe;
+	      insert(cam,mainConv) into Regroupe 
+		end;
+		
+		delete (conv,self) from Gere;
+		destroy conv 
+	  end;
+	end
+	
+  diviserConvoi(mainConv: Convoi, newLeader:Camion, listCam:Set(Camion))
+    begin
+	  declare test : Convoi;
+	  test := new Convoi;
+	  test.ID:= 2;
+	  test.routeId:=1;
+	  insert(test,self) into Gere;	
+	  insert (conv,self.route->any(r|r.ID=newLeader.routeId)) into Contenir2;
+	  newLeader.convoiId:=test.ID;
+	  newLeader.positionConvoi:=1;
+	  newLeader.isLeader:=true;
+	  delete (newLeader,mainConv) from Regroupe;
+	  insert(newLeader,test) into Regroupe;		
+	  for cam in listCam do
+		cam.convoiId:=test.ID;
+		delete (cam,mainConv) from Regroupe;
+	    insert(cam,test) into Regroupe;
+		cam.positionConvoi:= test.camion->size();
+		cam.isLeader:=false
+	  end;
+	end
+	
+  detachementCamionConvoi(cam:Camion)
+    begin
+	  
+	  for c in cam.convoi.camion do
+		  if c.positionConvoi > cam.positionConvoi then
+		  c.positionConvoi := cam.positionConvoi-1 
+		  end
+		end;
+	  delete (cam,cam.convoi) from Regroupe;
+	  cam.isLeader:=false;
+	  cam.positionConvoi:=0;
+	  cam.convoiId:=0;
+	end
+	pre camionInConvoi: cam.convoi->notEmpty()
+	pre notLeader: cam.isLeader=false
+	post camionOutConvoi : cam.convoi->isEmpty()
+	
+  ratachementCamionConvoi(cam:Camion,conv:Convoi)
+    begin
+	  insert (cam,conv) into Regroupe;
+	  cam.positionConvoi:=conv.camion->size();
+	  cam.convoiId:=conv.ID;
+	end
+end
+
+
+class Balise 
+attributes
+  ID : Integer
+  status: Boolean
+operations
+  getStatus() : Boolean
+end
+
+class Route 
+attributes
+  ID : Integer
+  nbHours : Integer -- Nombre d'heure approx.
+  nbConvoi : Integer -- Nombre de convoi sur cette route
+operations
+  addBalise() : Integer
+  removeBalise() : Integer
+  evalTime() : Integer -- Retourne le nombre d'heure
+  countConvoi() : Integer
+end
+
+-- associations
+
+association Regroupe between
+  Camion[2..*] role camion;
+  Convoi[0..1] role convoi;
+end
+
+association Communique between
+  Camion [1..*] role camion
+  Central [1] role central
+end
+
+association Gere between
+  Convoi [1..*] role convoi
+  Central [1] role central
+end
+
+association Monitoring between
+  Balise [1..*] role balise
+  Central [1] role central
+end
+
+association Contenir2 between
+  Convoi [1..*] role convoi
+  Route [1] role route
+end
+
+association Creation between
+  Central [1] role central
+  Route [1..*] role route
+end
+
+association Contenir between
+  Balise [1..*] role balise
+  Route [1] role route
+end
+
+-- OCL constraints
+ 
+constraints
+
+context Convoi
+  inv ConvoiActif:
+  self.camion->one(c | c.isLeader) and self.camion->size() >= 2 
+
+  
+context Camion
+  inv leaderEnAvant:
+	self.isLeader implies self.positionConvoi = 1
+	
+  inv camionSolo:
+	let IDRouteCamion: Integer = self.routeId in
+	if self.convoi->isEmpty() then
+		Camion.allInstances->one(c | c.routeId = IDRouteCamion) and Convoi.allInstances->excludes(IDRouteCamion) 
+    else 
+		true
+	endif
+	
+  inv camionWithConvoi:
+	if self.convoi->notEmpty() then
+		self.routeId = self.convoi.routeId else true 
+	endif
+	
+	
+context Route
+	inv BaliseActive:
+		self.balise.forAll(status = true)
