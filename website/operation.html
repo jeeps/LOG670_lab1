@@ -350,6 +350,9 @@ begin
   test.ID:= 2;
   test.routeId:=1;
   
+  insert(test,self) into Gere;
+  insert (test,self.route->any(r|r.ID=newLeader.routeId)) into Contenir2;
+  
   newLeader.convoiId:=test.ID;
   newLeader.positionConvoi:=1;
   newLeader.isLeader:=true;
@@ -361,7 +364,7 @@ begin
 	cam.convoiId:=test.ID;
 	delete (cam,mainConv) from Regroupe;
 	insert(cam,test) into Regroupe;
-	cam.positionConvoi:= test.camion->size()+1;
+	cam.positionConvoi:= test.camion->size();
 	cam.isLeader:=false
   end;
 end
@@ -370,7 +373,7 @@ end
 								</td>
                                 <td>
 									<p><b>Division d'un convoi</b></p>
-									<p>Permet de diviser un convoi selon les camions que l'on passe en paramètre. Il est important de spécifier lequel de ces camions sera le nouveau leader. *Le nouveau leader doit être également dans la liste (param #3)</p>
+									<p>Permet de diviser un convoi selon les camions que l'on passe en paramètre. Il est important de spécifier lequel de ces camions sera le nouveau leader.</p>
 									
 									<p><b>Pré-conditions</b></p>
 									<p>Aucune</p>
